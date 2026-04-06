@@ -15,7 +15,7 @@ fuser -k 3000/tcp || true
 
 cd "$DIST_DIR"
 
-# Start server (NO sudo)
-nohup http-server -p 3000 > app.log 2>&1 &
+# Use FULL PATH (critical fix)
+nohup /usr/local/bin/http-server -p 3000 > app.log 2>&1 &
 
 echo "App started successfully on port 3000"
