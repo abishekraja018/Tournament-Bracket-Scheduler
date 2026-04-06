@@ -1,27 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ $# -ne 1 ]]; then
-    echo "Usage: $0 <dist-folder>" >&2
-    exit 1
-fi
-
 DIST_DIR="$1"
 
-if [[ ! -d "${DIST_DIR}" ]]; then
-    echo "Deploy folder not found: ${DIST_DIR}" >&2
-    exit 1
+if [[ ! -d "$DIST_DIR" ]]; then
+  echo "Dist folder not found!"
+  exit 1
 fi
 
-: "${DEPLOY_HOST:?DEPLOY_HOST is required}"
-: "${DEPLOY_USER:?DEPLOY_USER is required}"
-: "${DEPLOY_PATH:?DEPLOY_PATH is required}"
+echo "Deploying locally..."
 
-SSH_PORT="${SSH_PORT:-22}"
+# Kill previous app (if running)
+pkill -f "node" || true
 
-SSH_TARGET="${DEPLOY_USER}@${DEPLOY_HOST}"
+# Go to dist and start app
+cd "$DIST_DIR"
 
-ssh -p "${SSH_PORT}" -o StrictHostKeyChecking=no "${SSH_TARGET}" "mkdir -p '${DEPLOY_PATH}'"
-tar -C "${DIST_DIR}" -czf - . | ssh -p "${SSH_PORT}" -o StrictHostKeyChecking=no "${SSH_TARGET}" "tar -xzf - -C '${DEPLOY_PATH}'"
+# Install dependencies if needed
+npm install
 
-echo "Deployment complete: ${SSH_TARGET}:${DEPLOY_PATH}"
+# Start app in background
+nohup npm start > app.log 2>&1 &
+
+echo "App started successfully"

@@ -1,0 +1,22 @@
+{
+  "name": "tournament-bracket-scheduler",
+  "version": "1.0.0",
+  "description": "A scheduler for e-sports and sports tournaments",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -p 8080",
+    "build": "echo 'No build step needed for static site'"
+  },
+  "keywords": [
+    "tournament",
+    "bracket",
+    "scheduler",
+    "sports",
+    "esports"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+}
