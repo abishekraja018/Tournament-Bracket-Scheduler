@@ -8,18 +8,22 @@ if [[ ! -d "$DIST_DIR" ]]; then
   exit 1
 fi
 
-echo "Deploying locally..."
+echo "Deploying locally on port 3000..."
 
-# Kill previous app (if running)
-pkill -f "node" || true
+# Kill previous app running on port 3000
+fuser -k 3000/tcp || true
 
-# Go to dist and start app
+# Move into build folder
 cd "$DIST_DIR"
 
-# Install dependencies if needed
-npm install
+# Install http-server globally if not installed
+if ! command -v http-server &> /dev/null
+then
+  echo "Installing http-server..."
+  sudo npm install -g http-server
+fi
 
-# Start app in background
-nohup npm start > app.log 2>&1 &
+# Start server on port 3000 in background
+nohup http-server -p 3000 > app.log 2>&1 &
 
-echo "App started successfully"
+echo "App started successfully on port 3000"
