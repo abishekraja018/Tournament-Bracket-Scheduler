@@ -10,12 +10,22 @@ fi
 
 echo "Deploying locally on port 3000..."
 
-# Kill previous app
+# Kill previous process
 fuser -k 3000/tcp || true
 
 cd "$DIST_DIR"
 
-# Use FULL PATH (critical fix)
-nohup /usr/local/bin/http-server -p 3000 > app.log 2>&1 &
+# Start server properly detached
+nohup /usr/local/bin/http-server -p 3000 > app.log 2>&1 < /dev/null &
+
+# Wait for startup
+sleep 3
+
+# Verify server started
+if ! ss -tuln | grep -q 3000; then
+  echo "ERROR: App failed to start"
+  cat app.log
+  exit 1
+fi
 
 echo "App started successfully on port 3000"
