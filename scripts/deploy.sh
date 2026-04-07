@@ -26,7 +26,7 @@ nohup /usr/local/bin/http-server -p 3000 > app.log 2>&1 < /dev/null &
 # Wait for server to start
 sleep 3
 
-# Verify server is running abishek
+# Verify server is running abishek raja
 if ss -tuln | grep -q ":3000"; then
   echo "App started successfully on port 3000"
 else
